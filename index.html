@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#08080d" />
+<meta name="description" content="خرید فالور، ویو و لایک تیک تاک با قیمت ارزان و تحویل سریع — پشتیبانی ۲۴ ساعته. فالور، لایک و ویو رایگان روزانه!" />
+<title>TikBoost | افزایش فالور و ویو تیک تاک — رایگان روزانه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #08080d; --card: #14141c; --popover: #101018;
+    --fg: #ffffff; --muted: #a1a1b5; --primary: #ff0050;
+    --primary-glow: rgba(255,0,80,.25); --green: #00ff66;
+    --cyan: #00f0ff; --yellow: #facc15; --radius: 16px;
+    --transition: .35s cubic-bezier(.4,0,.2,1);
+  }
+  [data-theme="cyan"]  { --primary: #00f0ff; --primary-glow: rgba(0,240,255,.25); }
+  [data-theme="green"] { --primary: #00ff66; --primary-glow: rgba(0,255,102,.25); }
+  [data-theme="purple"]{ --primary: #a855f7; --primary-glow: rgba(168,85,247,.25); }
+  [data-theme="orange"]{ --primary: #fb923c; --primary-glow: rgba(251,146,60,.25); }
+  [data-theme="pink"]  { --primary: #f472b6; --primary-glow: rgba(244,114,182,.25); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); color-scheme: dark; scroll-behavior: smooth; }
+  body {
+    font-family: "Vazirmatn", Tahoma, system-ui, sans-serif;
+    background: var(--bg); color: var(--fg); min-height: 100vh;
+    display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  #matrixCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .12; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 50; width: 100%; background: rgba(8,8,13,.92); backdrop-filter: blur(16px) saturate(1.2); border-bottom: 2px solid var(--primary); box-shadow: 0 4px 30px var(--primary-glow); }
+  .header-inner { width: 94%; max-width: 960px; margin: 0 auto; padding: 10px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .logo-area { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 42px; height: 42px; flex: none; border-radius: 50%; border: 2px solid var(--fg); background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--primary-glow); }
+  .site-title { font-size: 15px; font-weight: 800; color: var(--primary); letter-spacing: .5px; }
+  .menu-toggle { display: flex; flex-direction: column; gap: 5px; padding: 8px; border: 1px solid var(--primary); border-radius: 10px; background: rgba(0,0,0,.4); cursor: pointer; transition: background var(--transition), box-shadow var(--transition); }
+  .menu-toggle:hover { background: rgba(255,0,80,.1); box-shadow: 0 0 16px var(--primary-glow); }
+  .menu-toggle span { display: block; width: 26px; height: 3px; background: var(--primary); border-radius: 2px; transition: background .3s; }
+
+  /* Main */
+  main { position: relative; z-index: 1; width: 94%; max-width: 960px; margin: 0 auto; padding: 22px 0 36px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* Hero */
+  .hero { background: linear-gradient(145deg, rgba(255,0,80,.08), rgba(0,240,255,.06)); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 34px 24px; text-align: center; position: relative; overflow: hidden; }
+  .hero h1 { font-size: 26px; font-weight: 900; line-height: 1.5; color: var(--fg); text-shadow: 0 0 20px var(--primary-glow); }
+  .hero h1 span { color: var(--primary); }
+  .hero p { margin-top: 10px; font-size: 15px; color: var(--muted); max-width: 520px; margin-inline: auto; line-height: 1.8; }
+  .hero-badges { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,0,80,.1); border: 1px solid var(--primary); color: var(--primary); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+
+  /* Stats */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .stat-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 16px 10px; text-align: center; transition: transform .25s, border-color .25s; }
+  .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+  .stat-num { font-size: 22px; font-weight: 900; color: var(--primary); text-shadow: 0 0 12px var(--primary-glow); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 700; }
+
+  /* Section titles */
+  .section-title { font-size: 20px; font-weight: 900; color: var(--fg); display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  /* ===== FREE SECTION ===== */
+  .free-section { background: linear-gradient(145deg, rgba(255,0,80,.06), rgba(0,240,255,.04)); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 26px 22px; position: relative; overflow: hidden; }
+  .free-section::before { content: ''; position: absolute; top: -40%; left: -40%; width: 80%; height: 80%; background: radial-gradient(circle, var(--primary-glow), transparent 70%); opacity: .4; pointer-events: none; }
+  .free-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; position: relative; z-index: 1; }
+  .free-icon { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--cyan)); display: flex; align-items: center; justify-content: center; font-size: 24px; flex: none; box-shadow: 0 0 20px var(--primary-glow); animation: pulseGift 2.5s infinite; }
+  @keyframes pulseGift { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.08); } }
+  .free-title { font-size: 18px; font-weight: 900; color: var(--fg); }
+  .free-title span { color: var(--primary); }
+  .free-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .free-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; position: relative; z-index: 1; }
+  .free-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 18px 14px; text-align: center; transition: transform .3s, border-color .3s; position: relative; }
+  .free-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+  .free-card-badge { position: absolute; top: -1px; right: -1px; background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 0 14px 0 10px; }
+  .free-card-emoji { font-size: 28px; margin-bottom: 8px; }
+  .free-card-name { font-size: 14px; font-weight: 800; color: var(--fg); }
+  .free-card-qty { font-size: 22px; font-weight: 900; color: var(--primary); margin-top: 6px; text-shadow: 0 0 12px var(--primary-glow); }
+  .free-card-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .free-progress-wrap { background: rgba(255,255,255,.06); border-radius: 8px; height: 8px; margin-top: 10px; overflow: hidden; }
+  .free-progress-bar { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--primary), var(--cyan)); width: 100%; transition: width .5s; }
+  .free-countdown { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 14px; position: relative; z-index: 1; background: rgba(0,0,0,.2); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.05); }
+  .free-countdown strong { color: var(--primary); font-size: 16px; letter-spacing: 1px; }
+  .free-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
+  .free-form .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .free-form .form-group.full { grid-column: 1 / -1; }
+  .free-form label { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .free-form input, .free-form select {
+    width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px; background: rgba(0,0,0,.3); color: var(--fg);
+    font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s;
+  }
+  .free-form input:focus, .free-form select:focus { border-color: var(--primary); }
+  .free-submit { grid-column: 1 / -1; height: 48px; border-radius: 14px; background: linear-gradient(90deg, var(--primary), var(--cyan)); color: #fff; font-family: inherit; font-size: 15px; font-weight: 800; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 28px var(--primary-glow); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .free-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 36px var(--primary-glow); }
+  .free-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .free-status { margin-top: 12px; padding: 12px; border-radius: 12px; font-size: 13px; text-align: center; display: none; position: relative; z-index: 1; }
+  .free-status.show { display: block; }
+  .free-status.success { background: rgba(0,255,102,.08); border: 1px solid var(--green); color: var(--green); }
+  .free-status.wait { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); color: var(--muted); }
+  .free-status.error { background: rgba(255,0,80,.08); border: 1px solid var(--primary); color: var(--primary); }
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; display: inline-block; vertical-align: middle; margin-left: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Services */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .service-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding: 22px 16px; text-align: center; transition: transform .3s, border-color .3s, box-shadow .3s; cursor: pointer; }
+  .service-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 12px 40px rgba(0,0,0,.5), 0 0 30px var(--primary-glow); }
+  .service-icon { width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; background: linear-gradient(135deg, var(--primary), var(--cyan)); box-shadow: 0 0 20px var(--primary-glow); }
+  .service-name { font-size: 15px; font-weight: 800; color: var(--fg); }
+  .service-desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.7; }
+  .service-price { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--green); }
+
+  /* Pricing Table */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid rgba(255,255,255,.06); background: var(--card); }
+  .product-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .product-table thead { background: rgba(255,0,80,.08); }
+  .product-table th { padding: 12px 14px; text-align: right; font-weight: 800; color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+  .product-table td { padding: 12px 14px; border-top: 1px solid rgba(255,255,255,.05); color: var(--fg); white-space: nowrap; }
+  .product-table tr:hover td { background: rgba(255,255,255,.03); }
+  .tbl-price { color: var(--green); font-weight: 800; }
+  .tbl-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 10px; background: var(--primary); color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s; white-space: nowrap; }
+  .tbl-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); }
+
+  /* Order Form */
+  .order-box { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding: 24px; }
+  .order-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px; background: rgba(0,0,0,.3); color: var(--fg);
+    font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+  .form-group textarea { height: 90px; resize: none; }
+  .submit-btn { grid-column: 1 / -1; height: 48px; border-radius: 14px; background: linear-gradient(90deg, var(--primary), var(--cyan)); color: #fff; font-family: inherit; font-size: 15px; font-weight: 800; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 28px var(--primary-glow); }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px var(--primary-glow); }
+
+  /* Reviews */
+  .reviews-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .review-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 16px; transition: transform .25s, border-color .25s; }
+  .review-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+  .review-stars { color: var(--yellow); font-size: 14px; margin-bottom: 8px; }
+  .review-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .reviewer { margin-top: 10px; font-size: 11px; font-weight: 700; color: var(--primary); }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; overflow: hidden; transition: border-color .3s, box-shadow .3s; }
+  .faq-item:hover { border-color: rgba(255,255,255,.12); }
+  .faq-item.active { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+  .faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; background: none; border: none; color: var(--fg); font-family: inherit; font-size: 14px; font-weight: 700; text-align: right; cursor: pointer; transition: color .2s; }
+  .faq-q:hover { color: var(--primary); }
+  .faq-q .icon { flex: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,.08); font-size: 13px; transition: transform .3s, background .3s; }
+  .faq-item.active .faq-q .icon { transform: rotate(180deg); background: var(--primary); color: #000; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease; padding: 0 16px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+  .faq-item.active .faq-a { max-height: 300px; padding: 0 16px 14px; }
+
+  /* Footer */
+  .big-footer { background: linear-gradient(180deg, rgba(255,0,80,.04), transparent); border-top: 1px solid rgba(255,255,255,.06); margin-top: auto; }
+  .big-footer-inner { width: 94%; max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; padding: 36px 0 24px; }
+  .footer-col h3 { font-size: 14px; font-weight: 800; color: var(--fg); margin-bottom: 12px; position: relative; display: inline-block; }
+  .footer-col h3::after { content: ''; position: absolute; right: 0; bottom: -4px; width: 24px; height: 2px; background: var(--primary); border-radius: 2px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-col li { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); transition: color .2s; cursor: pointer; }
+  .footer-col li:hover { color: var(--fg); }
+  .footer-col li::before { content: '▶'; color: var(--primary); font-size: 10px; }
+  .footer-col a { color: inherit; text-decoration: none; transition: color .2s; }
+  .footer-col a:hover { color: var(--primary); }
+  .contact-line { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+  .contact-line svg { width: 16px; height: 16px; flex: none; }
+  .newsletter-box { display: flex; flex-direction: column; gap: 8px; }
+  .newsletter-box input { padding: 10px 12px; border: 1px solid rgba(255,255,255,.1); border-radius: 10px; background: rgba(0,0,0,.3); color: var(--fg); font-family: inherit; font-size: 12px; outline: none; }
+  .newsletter-box button { padding: 10px; border-radius: 10px; background: var(--primary); color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; border: none; cursor: pointer; transition: opacity .2s; }
+  .newsletter-box button:hover { opacity: .9; }
+  .newsletter-box small { font-size: 11px; color: var(--muted); }
+  .footer-bottom { text-align: center; padding: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid rgba(255,255,255,.04); }
+
+  /* To Top */
+  #toTop { position: fixed; left: 18px; bottom: 18px; z-index: 60; width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; box-shadow: 0 4px 16px var(--primary-glow); }
+  #toTop.show { opacity: 1; pointer-events: auto; }
+  #toTop:hover { transform: scale(1.1); }
+
+  /* Telegram Drawer */
+  .drawer-overlay { position: fixed; inset: 0; z-index: 110; display: none; }
+  .drawer-overlay[data-open="true"] { display: block; }
+  .drawer-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.55); opacity: 0; transition: opacity .3s ease; }
+  .drawer-overlay[data-open="true"] .drawer-backdrop { opacity: 1; }
+  .drawer { position: absolute; right: 0; top: 0; bottom: 0; width: min(300px, 85vw); background: #151520; display: flex; flex-direction: column; transform: translateX(100%); transition: transform .35s cubic-bezier(.4,0,.2,1); box-shadow: -8px 0 40px rgba(0,0,0,.6); border-left: 1px solid rgba(255,255,255,.06); }
+  .drawer-overlay[data-open="true"] .drawer { transform: translateX(0); }
+  .drawer-header { padding: 22px 18px 14px; display: flex; align-items: center; gap: 12px; }
+  .drawer-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex: none; }
+  .drawer-info { display: flex; flex-direction: column; gap: 2px; }
+  .drawer-name { font-size: 15px; font-weight: 800; color: var(--fg); }
+  .drawer-status { font-size: 12px; color: var(--muted); }
+  .drawer-theme { padding: 0 18px 10px; }
+  .drawer-theme-label { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+  .drawer-divider { height: 1px; background: rgba(255,255,255,.08); margin: 6px 14px; }
+  .drawer-list { display: flex; flex-direction: column; padding: 6px 10px; gap: 2px; }
+  .drawer-item { display: flex; align-items: center; gap: 14px; padding: 11px 12px; border-radius: 10px; background: none; border: none; color: var(--fg); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s; text-align: right; width: 100%; }
+  .drawer-item:hover { background: rgba(255,255,255,.06); }
+  .drawer-icon { width: 22px; height: 22px; flex: none; color: var(--muted); transition: color .2s; }
+  .drawer-item:hover .drawer-icon { color: var(--primary); }
+
+  /* Modals (center) */
+  .overlay { position: fixed; inset: 0; z-index: 100; background: rgba(3,3,6,.92); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; padding: 16px; opacity: 0; transition: opacity .35s ease; }
+  .overlay[data-open="true"] { display: flex; opacity: 1; }
+  .modal { width: 100%; max-width: 420px; background: linear-gradient(145deg, #181824, #0f0f18); border: 1px solid var(--primary); border-radius: 20px; padding: 28px 22px; text-align: center; box-shadow: 0 0 60px var(--primary-glow), 0 20px 60px rgba(0,0,0,.6); transform: translateY(30px) scale(.96); transition: transform .45s cubic-bezier(.34,1.56,.64,1), opacity .35s ease; position: relative; overflow: hidden; }
+  .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), var(--cyan), var(--primary), transparent); animation: shimmer 2s linear infinite; background-size: 200% 100%; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .overlay[data-open="true"] .modal { transform: translateY(0) scale(1); }
+  .modal-icon { width: 60px; height: 60px; margin: 0 auto 14px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--cyan)); display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 0 24px var(--primary-glow); }
+  .modal h2 { font-size: 18px; font-weight: 900; color: var(--fg); }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.8; }
+  .modal-actions { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .link-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 46px; border-radius: 12px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .2s, opacity .2s; border: none; cursor: pointer; }
+  .link-btn:hover { transform: translateY(-3px); opacity: .92; }
+  .bg-telegram { background: #0088cc; color: #fff; box-shadow: 0 8px 24px rgba(0,136,204,.35); }
+  .bg-whatsapp { background: #25d366; color: #08080d; box-shadow: 0 8px 24px rgba(37,211,102,.35); }
+  .bg-primary  { background: var(--primary); color: #fff; box-shadow: 0 8px 24px var(--primary-glow); }
+  .cancel-btn { height: 42px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: #24242f; color: var(--fg); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s, transform .2s; width: 100%; }
+  .cancel-btn:hover { background: #2f2f3d; transform: translateY(-1px); }
+  .sold-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,255,102,.12); border: 1px solid var(--green); color: var(--green); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 18px; }
+    .hero p { font-size: 13px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .stat-num { font-size: 18px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .reviews-row { grid-template-columns: 1fr; }
+    .order-form { grid-template-columns: 1fr; }
+    .big-footer-inner { grid-template-columns: 1fr 1fr; gap: 20px; padding: 28px 0 18px; }
+    .footer-col h3 { font-size: 13px; }
+    .modal { padding: 24px 18px; }
+    .modal h2 { font-size: 16px; }
+    .drawer { width: min(280px, 82vw); }
+    .drawer-header { padding: 18px 14px 10px; }
+    .drawer-item { padding: 10px; font-size: 13px; }
+    .drawer-icon { width: 20px; height: 20px; }
+    .free-grid { grid-template-columns: 1fr; }
+    .free-form { grid-template-columns: 1fr; }
+    .free-title { font-size: 15px; }
+  }
+  @media (max-width: 400px) {
+    .big-footer-inner { grid-template-columns: 1fr; }
+    .product-table { font-size: 11px; }
+    .product-table th, .product-table td { padding: 10px 8px; }
+    .tbl-btn { height: 30px; padding: 0 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="avatar">TB</div>
+      <div class="site-title">TikBoost</div>
+    </div>
+    <button type="button" class="menu-toggle" onclick="openMenu()" aria-label="منو">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Main -->
+<main>
+  <!-- Hero -->
+  <section class="hero" id="heroSection">
+    <h1>🚀 <span>فالور، ویو و لایک تیک تاک</span> با تحویل فوری!</h1>
+    <p>افزایش واقعی و تضمینی فالور، ویو و لایک تیک تاک با کمترین قیمت و پشتیبانی ۲۴ ساعته. سفارش خود را ثبت کنید و در کمتر از چند دقیقه نتیجه را ببینید.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">⚡ تحویل آنی</span>
+      <span class="hero-badge">🔒 تضمینی</span>
+      <span class="hero-badge">💰 قیمت ارزان</span>
+      <span class="hero-badge">🎯 واقعی</span>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-row" aria-label="آمار">
+    <div class="stat-card"><div class="stat-num" id="statOrders">12,847</div><div class="stat-label">سفارش موفق</div></div>
+    <div class="stat-card"><div class="stat-num" id="statUsers">8,520</div><div class="stat-label">مشتری فعال</div></div>
+    <div class="stat-card"><div class="stat-num" id="statDeliver">2m</div><div class="stat-label">زمان تحویل</div></div>
+    <div class="stat-card"><div class="stat-num" id="statSupport">24/7</div><div class="stat-label">پشتیبانی</div></div>
+  </section>
+
+  <!-- FREE SERVICES -->
+  <section class="free-section" id="freeSection" aria-label="خدمات رایگان">
+    <div class="free-header">
+      <div class="free-icon">🎁</div>
+      <div>
+        <div class="free-title"><span>۲۰ فالور + ۳۰ لایک + ۳۰۰ ویو</span> رایگان روزانه!</div>
+        <div class="free-desc">هر ۲۴ ساعت یک‌بار می‌توانید بدون پرداخت هزینه، سفارش رایگان ثبت کنید.</div>
+      </div>
+    </div>
+
+    <div class="free-grid">
+      <div class="free-card">
+        <div class="free-card-badge">رایگان</div>
+        <div class="free-card-emoji">👥</div>
+        <div class="free-card-name">فالور تیک تاک</div>
+        <div class="free-card-qty">۲۰</div>
+        <div class="free-card-label">فالور رایگان / روز</div>
+        <div class="free-progress-wrap"><div class="free-progress-bar" id="barFollowers"></div></div>
+      </div>
+      <div class="free-card">
+        <div class="free-card-badge">رایگان</div>
+        <div class="free-card-emoji">❤️</div>
+        <div class="free-card-name">لایک تیک تاک</div>
+        <div class="free-card-qty">۳۰</div>
+        <div class="free-card-label">لایک رایگان / روز</div>
+        <div class="free-progress-wrap"><div class="free-progress-bar" id="barLikes"></div></div>
+      </div>
+      <div class="free-card">
+        <div class="free-card-badge">رایگان</div>
+        <div class="free-card-emoji">👁️</div>
+        <div class="free-card-name">ویو تیک تاک</div>
+        <div class="free-card-qty">۳۰۰</div>
+        <div class="free-card-label">ویو رایگان / روز</div>
+        <div class="free-progress-wrap"><div class="free-progress-bar" id="barViews"></div></div>
+      </div>
+    </div>
+
+    <div class="free-countdown" id="freeCountdown">⏳ تا سفارش رایگان بعدی: <strong id="countdownTimer">--:--:--</strong></div>
+
+    <form class="free-form" id="freeForm" onsubmit="submitFreeOrder(event)">
+      <div class="form-group full">
+        <label>لینک پروفایل یا ویدیوی تیک تاک</label>
+        <input type="url" id="freeLink" placeholder="https://tiktok.com/@username یا لینک ویدیو" required />
+      </div>
+      <div class="form-group">
+        <label>نام شما</label>
+        <input type="text" id="freeName" placeholder="نام و نام خانوادگی" required />
+      </div>
+      <div class="form-group">
+        <label>شماره تماس یا تلگرام</label>
+        <input type="text" id="freeContact" placeholder="@username یا شماره" required />
+      </div>
+      <div class="form-group full">
+        <label>انتخاب سرویس رایگان</label>
+        <select id="freeService" required>
+          <option value="">انتخاب کنید</option>
+          <option value="followers">👥 فالور رایگان (۲۰ عدد)</option>
+          <option value="likes">❤️ لایک رایگان (۳۰ عدد)</option>
+          <option value="views">👁️ ویو رایگان (۳۰۰ عدد)</option>
+        </select>
+      </div>
+      <button type="submit" class="free-submit" id="freeSubmitBtn">🚀 ارسال سفارش رایگان</button>
+    </form>
+
+    <div class="free-status" id="freeStatus"></div>
+  </section>
+
+  <!-- Services -->
+  <section aria-label="خدمات">
+    <div class="section-title">🎯 خدمات ما</div>
+    <div class="section-sub">بهترین خدمات افزایش اعتبار تیک تاک</div>
+    <div class="services-grid">
+      <div class="service-card" onclick="document.getElementById('serviceType').value='followers';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});">
+        <div class="service-icon">👥</div>
+        <div class="service-name">فالور تیک تاک</div>
+        <div class="service-desc">فالور واقعی و فعال تیک تاک بدون افت با تضمین کیفیت</div>
+        <div class="service-price">از ۵,۰۰۰ تومان</div>
+      </div>
+      <div class="service-card" onclick="document.getElementById('serviceType').value='views';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});">
+        <div class="service-icon">👁️</div>
+        <div class="service-name">ویو تیک تاک</div>
+        <div class="service-desc">افزایش بازدید ویدیوهای تیک تاک برای رشد سریع اکانت</div>
+        <div class="service-price">از ۲,۰۰۰ تومان</div>
+      </div>
+      <div class="service-card" onclick="document.getElementById('serviceType').value='likes';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});">
+        <div class="service-icon">❤️</div>
+        <div class="service-name">لایک تیک تاک</div>
+        <div class="service-desc">لایک واقعی روی ویدیوهای تیک تاک با سرعت بالا</div>
+        <div class="service-price">از ۱,۵۰۰ تومان</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section aria-label="قیمت‌ها">
+    <div class="section-title">💎 لیست قیمت‌ها</div>
+    <div class="section-sub">انتخاب کنید و سفارش دهید</div>
+    <div class="table-wrap">
+      <table class="product-table">
+        <thead><tr><th>خدمت</th><th>تعداد</th><th>قیمت</th><th>تحویل</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>👥 فالور تیک تاک</td><td>۱,۰۰۰</td><td class="tbl-price">500Af</td><td>۱-۶ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('followers',1000,5000)">🛒 خرید</button></td></tr>
+          <tr><td>👥 فالور تیک تاک</td><td>۵,۰۰۰</td><td class="tbl-price">1500Af</td><td>۱-۱۲ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('followers',5000,20000)">🛒 خرید</button></td></tr>
+          <tr><td>👥 فالور تیک تاک</td><td>۱۰,۰۰۰</td><td class="tbl-price">2500Af</td><td>۶-۲۴ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('followers',10000,35000)">🛒 خرید</button></td></tr>
+          <tr><td>👁️ ویو تیک تاک</td><td>۱۰,۰۰۰</td><td class="tbl-price">200Af</td><td>آنی</td><td><button class="tbl-btn" onclick="quickOrder('views',10000,2000)">🛒 خرید</button></td></tr>
+          <tr><td>👁️ ویو تیک تاک</td><td>۵۰,۰۰۰</td><td class="tbl-price">400Af</td><td>آنی</td><td><button class="tbl-btn" onclick="quickOrder('views',50000,8000)">🛒 خرید</button></td></tr>
+          <tr><td>👁️ ویو تیک تاک</td><td>۱۰۰,۰۰۰</td><td class="tbl-price">700Af</td><td>آنی</td><td><button class="tbl-btn" onclick="quickOrder('views',100000,15000)">🛒 خرید</button></td></tr>
+          <tr><td>❤️ لایک تیک تاک</td><td>۱,۰۰۰</td><td class="tbl-price">300Af</td><td>۱-۳ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('likes',1000,1500)">🛒 خرید</button></td></tr>
+          <tr><td>❤️ لایک تیک تاک</td><td>۵,۰۰۰</td><td class="tbl-price">650Af</td><td>۱-۶ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('likes',5000,6000)">🛒 خرید</button></td></tr>
+          <tr><td>❤️ لایک تیک تاک</td><td>۱۰,۰۰۰</td><td class="tbl-price">1000Af</td><td>۳-۱۲ ساعت</td><td><button class="tbl-btn" onclick="quickOrder('likes',10000,10000)">🛒 خرید</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Order Form -->
+  <section class="order-box" id="orderSection" aria-label="فرم سفارش">
+    <div class="section-title">📝 ثبت سفارش</div>
+    <div class="section-sub">اطلاعات سفارش خود را وارد کنید</div>
+    <form class="order-form" onsubmit="submitOrder(event)">
+      <div class="form-group">
+        <label>نوع خدمت</label>
+        <select id="serviceType" required>
+          <option value="">انتخاب کنید</option>
+          <option value="followers">👥 فالور تیک تاک</option>
+          <option value="views">👁️ ویو تیک تاک</option>
+          <option value="likes">❤️ لایک تیک تاک</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>تعداد</label>
+        <input type="number" id="serviceQty" placeholder="مثلاً ۱۰۰۰" min="100" required />
+      </div>
+      <div class="form-group full">
+        <label>لینک پروفایل یا ویدیو تیک تاک</label>
+        <input type="url" id="serviceLink" placeholder="https://tiktok.com/@username" required />
+      </div>
+      <div class="form-group">
+        <label>نام شما</label>
+        <input type="text" id="orderName" placeholder="نام و نام خانوادگی" required />
+      </div>
+      <div class="form-group">
+        <label>شماره تماس یا تلگرام</label>
+        <input type="text" id="orderContact" placeholder="@username یا شماره" required />
+      </div>
+      <div class="form-group full">
+        <label>توضیحات اضافی (اختیاری)</label>
+        <textarea id="orderNote" placeholder="هر نکته‌ای که لازم است بدانیم..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn">📨 ارسال سفارش</button>
+    </form>
+  </section>
+
+  <!-- Reviews -->
+  <section aria-label="نظرات مشتریان">
+    <div class="section-title">⭐ نظرات مشتریان</div>
+    <div class="section-sub">بیش از ۱۲ هزار نفر به ما اعتماد کرده‌اند</div>
+    <div class="reviews-row">
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">۱۰ هزار فالور سفارش دادم و در عرض ۳ ساعت تحویل گرفتم. کیفیت عالی بود و هیچ‌کدام نرفت!</div><div class="reviewer">— سارا محمدی</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">ویوهای ویدیوهایم خیلی سریع بالا رفت. قیمت‌ها هم نسبت به بقیه خیلی بهتره. پیشنهاد میکنم.</div><div class="reviewer">— امیر رضایی</div></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">پشتیبانی عالیه! یک بار مشکل داشتم و ظرف ۱۰ دقیقه حل شد. فالورها واقعی و فعال هستن.</div><div class="reviewer">— محمد کریمی</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">چندین بار خرید کردم. همیشه سریع تحویل میدن و لایک‌ها پایدار هستن. خیلی راضی‌ام!</div><div class="reviewer">— نگار احمدی</div></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section aria-label="سوالات متداول">
+    <div class="section-title">❓ سوالات متداول</div>
+    <div class="section-sub">پاسخ به رایج‌ترین سوالات شما</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>فالورها واقعی هستند یا فیک؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">ما هر دو نوع فالور واقعی و فیک را ارائه می‌دهیم. فالورهای واقعی اکانت‌های فعال با پروفایل کامل هستند که تعامل بالایی دارند و افت کمتری دارند. در جدول قیمت‌ها مشخص شده است.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>چقدر طول می‌کشد تا سفارش تحویل داده شود؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">ویوها معمولاً آنی تحویل داده می‌شوند. لایک‌ها بین ۱ تا ۶ ساعت و فالورها بین ۱ تا ۲۴ ساعت بسته به حجم سفارش. در صورت تأخیر غیرمعمول با پشتیبانی تماس بگیرید.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>آیا سفارش من تضمینی است؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">بله! تمامی سفارشات ما دارای تضمین هستند. در صورت بروز هرگونه مشکل یا عدم تحویل کامل، مبلغ شما بازگردانده می‌شود یا سفارش مجدداً ارسال خواهد شد.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>روش‌های پرداخت کدام‌اند؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">پرداخت از طریق ارزهای دیجیتال (USDT)، کارت به کارت، و روش‌های محلی افغانستان امکان‌پذیر است. بعد از ثبت سفارش، ادمین راهنمای پرداخت را ارسال می‌کند.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>آیا نیاز به پسورد اکانت دارید؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">خیر! ما فقط به لینک پروفایل یا لینک ویدیوی شما نیاز داریم. هرگز رمز عبور یا اطلاعات حساس خود را با کسی به اشتراک نگذارید.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>چگونه با پشتیبانی تماس بگیرم؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">می‌توانید از طریق تلگرام یا واتساپ با ما در تماس باشید:<br>📱 واتساپ: +93 77 898 7074<br>✈️ تلگرام: @PV_BeD_BoY<br>پشتیبانی ۲۴ ساعته و ۷ روز هفته!</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>سرویس رایگان چگونه کار می‌کند؟</span><span class="icon">▼</span></button>
+        <div class="faq-a">هر ۲۴ ساعت می‌توانید یک بار از سرویس رایگان استفاده کنید: ۲۰ فالور، ۳۰ لایک یا ۳۰۰ ویو. کافیست لینک پروفایل یا ویدیوی خود را وارد کرده و سرویس مورد نظر را انتخاب کنید. سفارش شما به صورت خودکار ثبت و پردازش می‌شود.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<div class="big-footer">
+  <div class="big-footer-inner">
+    <div class="footer-col">
+      <h3>خدمات</h3>
+      <ul>
+        <li><a href="#" onclick="document.getElementById('serviceType').value='followers';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});return false;">فالور تیک تاک</a></li>
+        <li><a href="#" onclick="document.getElementById('serviceType').value='views';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});return false;">ویو تیک تاک</a></li>
+        <li><a href="#" onclick="document.getElementById('serviceType').value='likes';document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});return false;">لایک تیک تاک</a></li>
+        <li><a href="#" onclick="document.getElementById('freeSection').scrollIntoView({behavior:'smooth'});return false;">🎁 سرویس رایگان</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>تماس با ما</h3>
+      <ul>
+        <li><a href="#" onclick="openAdmin();return false;">پشتیبانی</a></li>
+        <li><a href="#" onclick="document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});return false;">ثبت سفارش</a></li>
+        <li><a href="#" onclick="document.querySelector('.faq-section,section[aria-label=\"سوالات متداول\"]').scrollIntoView({behavior:'smooth'});return false;">سوالات متداول</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>اطلاعات تماس</h3>
+      <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>آدرس:</strong> کابل، افغانستان</div></div>
+      <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.65.37 1.3.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c1.03.34 1.8.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><strong>واتساپ:</strong> +93 77 898 7074</div></div>
+      <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><div><strong>ایمیل:</strong> support@tikboost.ir</div></div>
+    </div>
+    <div class="footer-col">
+      <h3>خبرنامه</h3>
+      <div class="newsletter-box">
+        <input type="email" placeholder="ایمیل شما" />
+        <button type="button" onclick="alert('با تشکر! ایمیل شما ثبت شد.')">عضویت</button>
+        <small>ما اسپم نمی‌فرستیم!</small>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© TikBoost — Powered by ━┃𝗠𝗥⚚Mujtaba↶🇦🇫𓃮</div>
+</div>
+
+<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="بازگشت به بالا">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<!-- ═══════ DRAWER ═══════ -->
+<div class="drawer-overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-labelledby="menuTitle" data-open="false">
+  <div class="drawer-backdrop" onclick="closeModal('menuOverlay')"></div>
+  <div class="drawer">
+    <div class="drawer-header">
+      <div class="drawer-avatar">TB</div>
+      <div class="drawer-info">
+        <div class="drawer-name">TikBoost</div>
+        <div class="drawer-status">افزایش فالور و ویو تیک تاک</div>
+      </div>
+    </div>
+    <div class="drawer-theme">
+      <div class="drawer-theme-label">🎨 تم رنگی</div>
+      <div class="theme-picker" style="justify-content:flex-start;margin-top:0;">
+        <span class="theme-dot dot-cyan" data-color="cyan" title="آبی نئون" onclick="setTheme('cyan',this)"></span>
+        <span class="theme-dot dot-green" data-color="green" title="سبز هکری" onclick="setTheme('green',this)"></span>
+        <span class="theme-dot dot-purple" data-color="purple" title="بنفش" onclick="setTheme('purple',this)"></span>
+        <span class="theme-dot dot-orange" data-color="orange" title="نارنجی" onclick="setTheme('orange',this)"></span>
+        <span class="theme-dot dot-pink" data-color="pink" title="صورتی" onclick="setTheme('pink',this)"></span>
+      </div>
+    </div>
+    <div class="drawer-divider"></div>
+    <nav class="drawer-list" aria-label="منو">
+      <button class="drawer-item" onclick="closeModal('menuOverlay');document.getElementById('heroSection').scrollIntoView({behavior:'smooth'});">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>صفحه اصلی</span>
+      </button>
+      <button class="drawer-item" onclick="closeModal('menuOverlay');document.getElementById('freeSection').scrollIntoView({behavior:'smooth'});">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="m12 7 5-5"/><path d="m12 7-5-5"/></svg>
+        <span>🎁 سرویس رایگان</span>
+      </button>
+      <button class="drawer-item" onclick="closeModal('menuOverlay');document.getElementById('orderSection').scrollIntoView({behavior:'smooth'});">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span>ثبت سفارش</span>
+      </button>
+      <button class="drawer-item" onclick="closeModal('menuOverlay');openAdmin();">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.65.37 1.3.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c1.03.34 1.8.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>ارتباط با ادمین</span>
+      </button>
+      <button class="drawer-item" onclick="closeModal('menuOverlay');document.querySelector('section[aria-label=\"سوالات متداول\"]').scrollIntoView({behavior:'smooth'});">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>سوالات متداول</span>
+      </button>
+      <div class="drawer-divider"></div>
+      <button class="drawer-item" onclick="closeModal('menuOverlay')">
+        <svg class="drawer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span>بستن منو</span>
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- Admin Contact Modal -->
+<div class="overlay" id="adminOverlay" role="dialog" aria-modal="true" aria-labelledby="adminTitle" data-open="false">
+  <div class="modal">
+    <div class="modal-icon">📞</div>
+    <h2 id="adminTitle">ارتباط با ادمین</h2>
+    <p class="modal-sub">برای سوال، مشاوره یا پیگیری سفارش از یکی از راه‌های زیر پیام بدهید.</p>
+    <div class="modal-actions">
+      <a class="link-btn bg-telegram" href="https://t.me/MR_Mujtaba_4k" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 19 20.1c-.2 1-.8 1.2-1.6.8l-4.5-3.3-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.5 13.2 3 11.8c-1-.3-1-1 .2-1.4L20.4 3.5c.8-.3 1.6.2 1.5.8Z"/></svg>
+        تلگرام
+      </a>
+      <a class="link-btn bg-whatsapp" href="https://wa.me/93793847173" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14c-.2.7-1.3 1.3-2 1.4-.6 0-1.3 0-3.7-1.1a12 12 0 0 1-4.6-4.7c-.7-1.3-.7-2.3-.5-2.9.2-.5.7-1.1 1.1-1.3.3-.1.9-.1 1.1.3l.8 1.8c.1.3 0 .5-.1.7l-.4.5c-.1.2-.2.4 0 .7.4.7 1 1.4 1.7 1.9.6.4 1 .6 1.3.7.2.1.4 0 .6-.2l.5-.6c.2-.2.4-.2.6-.1l1.8.9c.3.2.3.9.2 1.1Z"/></svg>
+        واتساپ
+      </a>
+      <button type="button" class="cancel-btn" onclick="closeModal('adminOverlay')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Order Modal -->
+<div class="overlay" id="quickOverlay" role="dialog" aria-modal="true" aria-labelledby="quickTitle" data-open="false">
+  <div class="modal">
+    <div class="modal-icon">🛒</div>
+    <h2 id="quickTitle">تأیید سفارش</h2>
+    <p class="modal-sub">
+      <span id="quickService">—</span><br>
+      <strong id="quickQty">تعداد: —</strong><br>
+      <strong id="quickPrice" style="color:var(--green)">قیمت: —</strong>
+    </p>
+    <div class="modal-actions">
+      <a id="quickTelegram" class="link-btn bg-telegram" href="#" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 19 20.1c-.2 1-.8 1.2-1.6.8l-4.5-3.3-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.5 13.2 3 11.8c-1-.3-1-1 .2-1.4L20.4 3.5c.8-.3 1.6.2 1.5.8Z"/></svg>
+        سفارش در تلگرام
+      </a>
+      <a id="quickWhatsapp" class="link-btn bg-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14c-.2.7-1.3 1.3-2 1.4-.6 0-1.3 0-3.7-1.1a12 12 0 0 1-4.6-4.7c-.7-1.3-.7-2.3-.5-2.9.2-.5.7-1.1 1.1-1.3.3-.1.9-.1 1.1.3l.8 1.8c.1.3 0 .5-.1.7l-.4.5c-.1.2-.2.4 0 .7.4.7 1 1.4 1.7 1.9.6.4 1 .6 1.3.7.2.1.4 0 .6-.2l.5-.6c.2-.2.4-.2.6-.1l1.8.9c.3.2.3.9.2 1.1Z"/></svg>
+        سفارش در واتساپ
+      </a>
+      <button type="button" class="cancel-btn" onclick="closeModal('quickOverlay')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ═════════ Matrix Background ═════════ */
+  (function() {
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, cols, drops;
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; cols = Math.floor(W / 16); drops = Array(cols).fill(1); }
+    resize(); window.addEventListener('resize', resize);
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&";
+    function draw() {
+      ctx.fillStyle = "rgba(8,8,13,.08)"; ctx.fillRect(0,0,W,H);
+      ctx.font = "14px monospace"; ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#ff0050';
+      for (let i=0;i<cols;i++) { const text=chars[Math.floor(Math.random()*chars.length)]; ctx.fillText(text,i*16,drops[i]*16); if(drops[i]*16>H&&Math.random()>.975)drops[i]=0; drops[i]++; }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ═════════ Theme ═════════ */
+  function setTheme(color, el) {
+    const map = {cyan:'#00f0ff',green:'#00ff66',purple:'#a855f7',orange:'#fb923c',pink:'#f472b6'};
+    const root = document.documentElement;
+    root.style.setProperty('--primary', map[color]||map.cyan);
+    root.style.setProperty('--primary-glow', (map[color]||map.cyan)+'40');
+    document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
+    if(el) el.classList.add('active');
+  }
+
+  /* ═════════ Modals ═════════ */
+  function openModal(id) { document.getElementById(id).dataset.open="true"; document.body.style.overflow="hidden"; }
+  function closeModal(id) { document.getElementById(id).dataset.open="false"; document.body.style.overflow=""; }
+  function openMenu() { openModal("menuOverlay"); }
+  function openAdmin() { openModal("adminOverlay"); }
+  document.querySelectorAll(".overlay").forEach(function(o){ o.addEventListener("click",function(e){ if(e.target===o) closeModal(o.id); }); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") document.querySelectorAll('.overlay[data-open="true"]').forEach(function(o){closeModal(o.id);}); });
+
+  /* ═════════ FAQ ═════════ */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const active = item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('active'));
+    if(!active) item.classList.add('active');
+  }
+
+  /* ═════════ Quick Order ═════════ */
+  const SERVICE_NAMES = {followers:'👥 فالور تیک تاک', views:'👁️ ویو تیک تاک', likes:'❤️ لایک تیک تاک'};
+  function quickOrder(type, qty, price) {
+    document.getElementById('quickService').textContent = SERVICE_NAMES[type];
+    document.getElementById('quickQty').textContent = 'تعداد: ' + qty.toLocaleString('fa-IR');
+    document.getElementById('quickPrice').textContent = 'قیمت: ' + price.toLocaleString('fa-IR') + ' تومان';
+    const msg = 'سلام 👋\nمی‌خواهم سفارش دهم:\n' + SERVICE_NAMES[type] + '\nتعداد: ' + qty + '\nقیمت: ' + price + ' تومان';
+    document.getElementById('quickTelegram').href = 'https://t.me/MR_Mujtaba_4k';
+    document.getElementById('quickWhatsapp').href = 'https://wa.me/93793847173?text=' + encodeURIComponent(msg);
+    openModal('quickOverlay');
+  }
+
+  /* ═════════ Order Form ═════════ */
+  function submitOrder(e) {
+    e.preventDefault();
+    const type = document.getElementById('serviceType').value;
+    const qty = document.getElementById('serviceQty').value;
+    const link = document.getElementById('serviceLink').value;
+    const name = document.getElementById('orderName').value;
+    const contact = document.getElementById('orderContact').value;
+    const note = document.getElementById('orderNote').value;
+    if(!type||!qty||!link||!name||!contact){ alert('لطفاً همه فیلدهای ضروری را پر کنید.'); return; }
+    const msg = 'سلام 👋\nسفارش جدید TikBoost:\n\n👤 نام: ' + name + '\n📞 تماس: ' + contact + '\n🎯 خدمت: ' + SERVICE_NAMES[type] + '\n🔢 تعداد: ' + qty + '\n🔗 لینک: ' + link + (note?'\n📝 توضیحات: '+note:'');
+    const tg = 'https://t.me/MR_Mujtaba_4k';
+    const wa = 'https://wa.me/93793847173?text=' + encodeURIComponent(msg);
+    if(confirm('سفارش شما آماده است. از کدام طریق ارسال شود؟\n\n• OK = واتساپ\n• Cancel = تلگرام')) {
+      window.open(wa, '_blank');
+    } else {
+      window.open(tg, '_blank');
+    }
+  }
+
+  /* ═════════ FREE ORDER SYSTEM ═════════ */
+  const FREE_LIMITS = { followers: 20, likes: 30, views: 300 };
+  const FREE_NAMES  = { followers: 'فالور', likes: 'لایک', views: 'ویو' };
+
+  function getFreeKey(type) { return 'free_last_' + type; }
+  function getFreeCountKey(type) { return 'free_count_' + type; }
+
+  function canUseFree(type) {
+    const last = localStorage.getItem(getFreeKey(type));
+    if (!last) return true;
+    const elapsed = Date.now() - parseInt(last, 10);
+    return elapsed >= 24 * 60 * 60 * 1000; // 24 hours
+  }
+
+  function getRemainingMs(type) {
+    const last = localStorage.getItem(getFreeKey(type));
+    if (!last) return 0;
+    const remaining = 24 * 60 * 60 * 1000 - (Date.now() - parseInt(last, 10));
+    return remaining > 0 ? remaining : 0;
+  }
+
+  function formatCountdown(ms) {
+    if (ms <= 0) return '۰۰:۰۰:۰۰';
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    const toFa = n => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    return toFa(h.toString().padStart(2,'0')) + ':' + toFa(m.toString().padStart(2,'0')) + ':' + toFa(s.toString().padStart(2,'0'));
+  }
+
+  function updateFreeUI() {
+    const types = ['followers','likes','views'];
+    let anyLocked = false;
+    let maxRemaining = 0;
+
+    types.forEach(type => {
+      const bar = document.getElementById('bar' + type.charAt(0).toUpperCase() + type.slice(1));
+      const can = canUseFree(type);
+      if (bar) bar.style.width = can ? '100%' : '0%';
+      if (!can) {
+        anyLocked = true;
+        const rem = getRemainingMs(type);
+        if (rem > maxRemaining) maxRemaining = rem;
+      }
+    });
+
+    const btn = document.getElementById('freeSubmitBtn');
+    const countdownEl = document.getElementById('countdownTimer');
+    const countdownWrap = document.getElementById('freeCountdown');
+
+    if (anyLocked) {
+      btn.disabled = true;
+      btn.innerHTML = '⏳ سفارش رایگان بعدی ۲۴ ساعت دیگر';
+      countdownWrap.style.display = 'block';
+      countdownEl.textContent = formatCountdown(maxRemaining);
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '🚀 ارسال سفارش رایگان';
+      countdownWrap.style.display = 'none';
+      countdownEl.textContent = '--:--:--';
+    }
+  }
+
+  function submitFreeOrder(e) {
+    e.preventDefault();
+    const type = document.getElementById('freeService').value;
+    const link = document.getElementById('freeLink').value;
+    const name = document.getElementById('freeName').value;
+    const contact = document.getElementById('freeContact').value;
+    const status = document.getElementById('freeStatus');
+
+    if (!type || !link || !name || !contact) {
+      status.className = 'free-status show error';
+      status.innerHTML = '❌ لطفاً همه فیلدها را پر کنید.';
+      return;
+    }
+
+    if (!canUseFree(type)) {
+      status.className = 'free-status show error';
+      status.innerHTML = '⏳ محدودیت روزانه! لطفاً بعد از اتمام شمارشگر دوباره تلاش کنید.';
+      return;
+    }
+
+    const btn = document.getElementById('freeSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> در حال پردازش...';
+    status.className = 'free-status show wait';
+    status.innerHTML = '⏳ سفارش شما در حال ثبت در سیستم است...';
+
+    // Simulate processing steps
+    setTimeout(() => { status.innerHTML = '🔍 در حال بررسی لینک و اعتبارسنجی...'; }, 1200);
+    setTimeout(() => { status.innerHTML = '✅ اعتبارسنجی موفق. در حال ارسال به سرور...'; }, 2500);
+    setTimeout(() => {
+      // Save to localStorage
+      localStorage.setItem(getFreeKey(type), Date.now().toString());
+      let count = parseInt(localStorage.getItem(getFreeCountKey(type)) || '0', 10);
+      localStorage.setItem(getFreeCountKey(type), (count + 1).toString());
+
+      const qty = FREE_LIMITS[type];
+      const msg = 'سلام 👋\n🎁 سفارش رایگان TikBoost:\n\n👤 نام: ' + name + '\n📞 تماس: ' + contact + '\n🎯 خدمت: ' + SERVICE_NAMES[type] + '\n🔢 تعداد: ' + qty + '\n🔗 لینک: ' + link + '\n⏰ زمان: ' + new Date().toLocaleString('fa-IR');
+
+      // Open WhatsApp with pre-filled message for admin to process manually
+      const wa = 'https://wa.me/93793847173?text=' + encodeURIComponent(msg);
+      window.open(wa, '_blank');
+
+      status.className = 'free-status show success';
+      status.innerHTML = '✅ سفارش رایگان شما با موفقیت ثبت شد! <br>🎁 ' + FREE_NAMES[type] + ' (' + qty + ' عدد) تا چند دقیقه دیگر ارسال می‌شود.<br>📩 پیام تأیید به واتساپ ادمین ارسال شد.';
+
+      btn.innerHTML = '✅ ثبت شد';
+      updateFreeUI();
+    }, 4000);
+  }
+
+  // Countdown ticker
+  setInterval(updateFreeUI, 1000);
+  updateFreeUI();
+
+  /* ═════════ Scroll to top ═════════ */
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function(){ toTop.classList.toggle('show', window.scrollY > 400); });
+</script>
+</body>
+</html>
